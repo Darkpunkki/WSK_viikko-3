@@ -1,0 +1,82 @@
+body {
+  background-color: #f0f0f0;
+  font-family: sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+  margin: 0;
+  padding: 0;
+}
+
+th {
+  background-color: #f0f0f0;
+  border-bottom: 1px solid #ccc;
+  font-weight: normal;
+  padding: 0.5em 1em;
+  text-align: left;
+}
+
+td {
+  border-bottom: 1px solid #ccc;
+  padding: 0.5em 1em;
+}
+
+.highlight {
+  background-color: rgb(238, 112, 28);
+  font-weight: 600;
+}
+
+.layout-container {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  align-items: flex-start;
+}
+
+.custom-modal {
+  display: none;
+}
+
+.custom-modal.show {
+  display: flex;
+}
+
+.modal-content {
+  background-color: rgb(67, 161, 234);
+  border: 1px solid #000000;
+  border-radius: 0.5em;
+  box-shadow: 0 0 1em rgba(0, 0, 0, 0.1);
+  margin: 1em 0; /* Space between modals */
+  padding: 1em;
+
+  h1 {
+    margin-top: 0;
+  }
+
+  button {
+    background-color: rgb(218, 47, 17);
+    border-radius: 0.25rem;
+    color: white;
+  }
+}
+
+@media (max-width: 768px) {
+  .layout-container {
+    display: flex;
+    gap: 10px;
+    flex-direction: column;
+  }
+
+  .custom-modal.show {
+    width: 100%;
+    display: block;
+  }
+
+  table {
+    width: 100%; /* Make the table take the full width */
+  }
+}
