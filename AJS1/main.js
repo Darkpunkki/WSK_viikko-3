@@ -1,17 +1,6 @@
-const apiUrl = 'https://10.120.32.94/restaurant/api/v1/restaurants';
+import {restaurantRow, restaurantModal} from './components.js';
 
-/*
-// A utility function to fetch data from the API
-async function fetchData(url) {
-  try {
-    const response = await fetch(url);
-    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-    return await response.json();
-  } catch (error) {
-    console.error('Error fetching data:', error);
-    return null;
-  }
-}*/
+const apiUrl = 'https://10.120.32.94/restaurant/api/v1/restaurants';
 
 // Arrow function to fetch the data
 const fetchData = async (url) => {
@@ -25,6 +14,63 @@ const fetchData = async (url) => {
   }
 };
 
+const fetchAndDisplayRestaurants = async () => {
+  try {
+    const restaurants = await fetchData(apiUrl);
+    if (!restaurants) {
+      console.error('Failed to load restaurant data');
+      document.getElementById('errors').innerHTML =
+        '<p>Failed to load restaurant data</p>';
+      return;
+    }
+
+    const tableNode = document.getElementById('table');
+    tableNode.innerHTML = ''; // Clear existing rows
+
+    const closeButton = document.getElementById('closeButton');
+    closeButton.addEventListener('click', () => showModal(false));
+
+    // Iterate through restaurants to create and append rows
+    restaurants.forEach((restaurant) => {
+      const row = restaurantRow(restaurant);
+      row.addEventListener('click', async () => {
+        // Clear existing highlights and highlight the clicked row
+        document
+          .querySelectorAll('#table tr')
+          .forEach((tr) => tr.classList.remove('highlight'));
+        row.classList.add('highlight');
+
+        // Fetch menu for the restaurant
+        const menuData = await fetchData(
+          `${apiUrl}/daily/${restaurant._id}/fi`
+        );
+
+        // Generate and display modal content
+        const modalContent = restaurantModal(restaurant, menuData);
+        document.getElementById('restaurantDetails').innerHTML = modalContent;
+        showModal(true);
+      });
+      tableNode.appendChild(row); // Append the created row to the table
+    });
+  } catch (error) {
+    console.error('Failed to load restaurant data:', error);
+    document.getElementById('errors').innerHTML =
+      '<p>Failed to load restaurant dataa</p>';
+  }
+};
+
+const showModal = (visible = true) => {
+  const modalContainer = document.getElementById('customModal');
+  if (visible) {
+    modalContainer.classList.add('show');
+  } else {
+    modalContainer.classList.remove('show');
+  }
+};
+
+fetchAndDisplayRestaurants();
+
+/*
 // Function to create a table row
 function createTableRow(restaurant) {
   return `<tr>
@@ -33,9 +79,21 @@ function createTableRow(restaurant) {
           </tr>`;
 }
 
-//const row = restaurantRow(restaurant);
 
-/*
+
+// A utility function to fetch data from the API
+async function fetchData(url) {
+  try {
+    const response = await fetch(url);
+    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+    return await response.json();
+  } catch (error) {
+    console.error('Error fetching data:', error);
+    return null;
+  }
+}
+
+
 // Function to display restaurants
 async function fetchAndDisplayRestaurants() {
   const restaurants = await fetchData(apiUrl);
@@ -60,7 +118,7 @@ async function fetchAndDisplayRestaurants() {
     });
   });
 }
-*/
+
 
 // arrow function to fetch and display restaurants
 
@@ -85,7 +143,7 @@ const fetchAndDisplayRestaurants = async () => {
   });
 };
 
-/*
+
 function showModal(visible = true) {
   const modalContainer = document.getElementById('customModal');
   if (visible) {
@@ -94,7 +152,7 @@ function showModal(visible = true) {
     modalContainer.classList.remove('show');
   }
 }
-*/
+
 
 // arrow function show modal
 const showModal = (visible = true) => {
@@ -105,6 +163,7 @@ const showModal = (visible = true) => {
     modalContainer.classList.remove('show');
   }
 };
+
 
 // arrow function highlightandshowdetails
 const highlightAndShowDetails = async (restaurant) => {
@@ -131,7 +190,8 @@ const highlightAndShowDetails = async (restaurant) => {
   });
 };
 
-/*
+
+
 // Function to display the restaurant details and daily menu
 async function highlightAndShowDetails(restaurant) {
   const phone = restaurant.phone !== '-' ? restaurant.phone : '';
@@ -158,7 +218,8 @@ async function highlightAndShowDetails(restaurant) {
     showModal(false); // Explicitly hide the modal
   });
 }
-*/
+
+modal.innerHTML = restaurantModal(restaurant, menu);
 
 // arrow function fetchanddisplaydailymenu
 const fetchAndDisplayDailyMenu = async (restaurantId) => {
@@ -180,7 +241,7 @@ const fetchAndDisplayDailyMenu = async (restaurantId) => {
   }
 };
 
-/*
+
 // Consolidate fetching and displaying the daily menu
 async function fetchAndDisplayDailyMenu(restaurantId) {
   const lang = 'fi';
@@ -201,5 +262,3 @@ async function fetchAndDisplayDailyMenu(restaurantId) {
   }
 }
 */
-
-fetchAndDisplayRestaurants();
