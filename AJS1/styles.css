@@ -12,10 +12,45 @@ table {
   padding: 0;
 }
 
+h3 {
+  margin-top: 50px;
+}
+
+.course {
+  list-style-position: inside;
+  margin-bottom: 20px;
+  padding-left: 10px;
+  border: 1px solid #ccc; /* Light grey border */
+  border-radius: 10px; /* Slightly rounded corners for a modern look */
+}
+
+.course li {
+  padding: 5px 0;
+  margin-left: 20px;
+}
+
+.course-name {
+  display: block;
+  color: #333;
+  font-weight: bold;
+
+  margin-bottom: 5px;
+}
+
+.course-price {
+  display: block;
+  color: #007bff;
+}
+
+.course-diets {
+  display: block;
+  color: #21903b;
+}
+
 th {
+  font-weight: bold;
   background-color: #f0f0f0;
   border-bottom: 1px solid #ccc;
-  font-weight: normal;
   padding: 0.5em 1em;
   text-align: left;
 }
@@ -46,7 +81,7 @@ td {
 }
 
 .modal-content {
-  background-color: rgb(67, 161, 234);
+  background-color: rgb(211, 231, 247);
   border: 1px solid #000000;
   border-radius: 0.5em;
   box-shadow: 0 0 1em rgba(0, 0, 0, 0.1);
@@ -62,6 +97,11 @@ td {
     border-radius: 0.25rem;
     color: white;
   }
+}
+
+#errors,
+#errorsHeading {
+  display: none;
 }
 
 @media (max-width: 768px) {

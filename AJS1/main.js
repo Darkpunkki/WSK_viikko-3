@@ -2,8 +2,20 @@ import {restaurantRow, restaurantModal} from './components.js';
 import {fetchData} from './utils.js';
 import {apiUrl} from './variables.js';
 
-const displayErrorMessage = (message) =>
-  (document.getElementById('errors').innerHTML = `<p>${message}</p>`);
+// displaying error messages directly for debugging purposes
+const displayErrorMessage = (message) => {
+  const errorsElement = document.getElementById('errors');
+  const errorsHeading = document.getElementById('errorsHeading');
+
+  if (message) {
+    errorsElement.innerHTML = `<p>${message}</p>`;
+    errorsElement.style.display = 'block'; // Show the errors element
+    errorsHeading.style.display = 'block'; // Show the errors heading
+  } else {
+    errorsElement.style.display = 'none'; // Hide the errors element
+    errorsHeading.style.display = 'none'; // Hide the errors heading
+  }
+};
 
 const clearTable = (tableNode) => (tableNode.innerHTML = '');
 
@@ -26,6 +38,7 @@ const highlightRow = (row) => {
 async function displayRestaurantModal(restaurant) {
   try {
     const menuData = await fetchData(`${apiUrl}/daily/${restaurant._id}/fi`);
+    console.log('Menu Data:', menuData);
     const modalContent = restaurantModal(restaurant, menuData);
     document.getElementById('restaurantDetails').innerHTML = modalContent;
 
@@ -42,12 +55,23 @@ const setupCloseButtonEvent = () => {
   closeButton?.addEventListener('click', () => showModal(false));
 };
 
-const fetchAndDisplayRestaurants = async () => {
+const fetchAndDisplayRestaurants = async (companyFilter = '') => {
   try {
-    const restaurants = await fetchData(apiUrl);
+    let restaurants = await fetchData(apiUrl);
+
+    if (companyFilter) {
+      restaurants = restaurants.filter(
+        (restaurant) => restaurant.company === companyFilter
+      );
+    }
+
     if (!restaurants) {
       throw new Error('Failed to load restaurant data');
     }
+
+    console.log('Restaurants:', restaurants);
+
+    displayErrorMessage('');
 
     const tableNode = document.getElementById('table');
     clearTable(tableNode);
@@ -71,6 +95,13 @@ const showModal = (visible = true) => {
     modalContainer.classList.remove('show');
   }
 };
+
+document.getElementById('errors').style.display = 'none';
+document.getElementById('errorsHeading').style.display = 'none';
+document.getElementById('companyFilter').addEventListener('change', (event) => {
+  const selectedCompany = event.target.value;
+  fetchAndDisplayRestaurants(selectedCompany);
+});
 
 fetchAndDisplayRestaurants();
 
