@@ -1,19 +1,80 @@
 import {restaurantRow, restaurantModal} from './components.js';
+import {fetchData} from './utils.js';
+import {apiUrl} from './variables.js';
 
-const apiUrl = 'https://10.120.32.94/restaurant/api/v1/restaurants';
+const displayErrorMessage = (message) =>
+  (document.getElementById('errors').innerHTML = `<p>${message}</p>`);
 
-// Arrow function to fetch the data
-const fetchData = async (url) => {
+const clearTable = (tableNode) => (tableNode.innerHTML = '');
+
+const appendRowToTable = (tableNode, row) => tableNode.appendChild(row);
+
+async function attachRowEventListener(row, restaurant) {
+  row.addEventListener('click', async () => {
+    highlightRow(row);
+    await displayRestaurantModal(restaurant);
+  });
+}
+
+const highlightRow = (row) => {
+  document
+    .querySelectorAll('#table tr')
+    .forEach((tr) => tr.classList.remove('highlight'));
+  row.classList.add('highlight');
+};
+
+async function displayRestaurantModal(restaurant) {
   try {
-    const response = await fetch(url);
-    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-    return await response.json();
+    const menuData = await fetchData(`${apiUrl}/daily/${restaurant._id}/fi`);
+    const modalContent = restaurantModal(restaurant, menuData);
+    document.getElementById('restaurantDetails').innerHTML = modalContent;
+
+    setupCloseButtonEvent();
+    showModal(true);
   } catch (error) {
-    console.error('Error fetching data:', error);
-    return null;
+    console.error('Error displaying restaurant modal:', error);
+    displayErrorMessage('Failed to load restaurant menu');
+  }
+}
+
+const setupCloseButtonEvent = () => {
+  const closeButton = document.getElementById('closeButton');
+  closeButton?.addEventListener('click', () => showModal(false));
+};
+
+const fetchAndDisplayRestaurants = async () => {
+  try {
+    const restaurants = await fetchData(apiUrl);
+    if (!restaurants) {
+      throw new Error('Failed to load restaurant data');
+    }
+
+    const tableNode = document.getElementById('table');
+    clearTable(tableNode);
+
+    restaurants.forEach((restaurant) => {
+      const row = restaurantRow(restaurant);
+      attachRowEventListener(row, restaurant);
+      appendRowToTable(tableNode, row);
+    });
+  } catch (error) {
+    console.error(error.message);
+    displayErrorMessage(error.message);
   }
 };
 
+const showModal = (visible = true) => {
+  const modalContainer = document.getElementById('customModal');
+  if (visible) {
+    modalContainer.classList.add('show');
+  } else {
+    modalContainer.classList.remove('show');
+  }
+};
+
+fetchAndDisplayRestaurants();
+
+/*
 const fetchAndDisplayRestaurants = async () => {
   try {
     const restaurants = await fetchData(apiUrl);
@@ -26,9 +87,6 @@ const fetchAndDisplayRestaurants = async () => {
 
     const tableNode = document.getElementById('table');
     tableNode.innerHTML = ''; // Clear existing rows
-
-    const closeButton = document.getElementById('closeButton');
-    closeButton.addEventListener('click', () => showModal(false));
 
     // Iterate through restaurants to create and append rows
     restaurants.forEach((restaurant) => {
@@ -48,6 +106,8 @@ const fetchAndDisplayRestaurants = async () => {
         // Generate and display modal content
         const modalContent = restaurantModal(restaurant, menuData);
         document.getElementById('restaurantDetails').innerHTML = modalContent;
+        const closeButton = document.getElementById('closeButton');
+        closeButton.addEventListener('click', () => showModal(false));
         showModal(true);
       });
       tableNode.appendChild(row); // Append the created row to the table
@@ -59,18 +119,7 @@ const fetchAndDisplayRestaurants = async () => {
   }
 };
 
-const showModal = (visible = true) => {
-  const modalContainer = document.getElementById('customModal');
-  if (visible) {
-    modalContainer.classList.add('show');
-  } else {
-    modalContainer.classList.remove('show');
-  }
-};
 
-fetchAndDisplayRestaurants();
-
-/*
 // Function to create a table row
 function createTableRow(restaurant) {
   return `<tr>

@@ -24,13 +24,15 @@ const restaurantModal = (restaurant, menu) => {
   `;
   });
 
+  const closeButtonHtml = '<button id="closeButton">Close</button>';
   const completeHtml = `
   <div class="restaurant-modal">
     <h2>${name}</h2>
     <p><strong>Address:</strong> ${address}, ${city}, ${postalCode}</p>
     <p><strong>Phone:</strong> ${phone}</p>
     <h3>Menu</h3>
-    ${menuHtml} <!-- Inserting the generated menu items HTML -->
+    ${menuHtml}
+    ${closeButtonHtml}
   </div>
 `;
 
