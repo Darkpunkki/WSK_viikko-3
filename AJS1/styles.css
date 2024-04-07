@@ -20,8 +20,9 @@ h3 {
   list-style-position: inside;
   margin-bottom: 20px;
   padding-left: 10px;
-  border: 1px solid #ccc; /* Light grey border */
-  border-radius: 10px; /* Slightly rounded corners for a modern look */
+  padding-right: 20px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
 }
 
 .course li {
@@ -106,14 +107,25 @@ td {
 
 @media (max-width: 768px) {
   .layout-container {
-    display: flex;
-    gap: 10px;
     flex-direction: column;
   }
 
   .custom-modal.show {
+    position: fixed;
+    top: 0;
+    left: 0;
     width: 100%;
+    height: 100%;
     display: block;
+    z-index: 10;
+    overflow-y: auto;
+    background-color: rgba(0, 0, 0, 0.5);
+  }
+
+  .modal-content {
+    margin: 10% auto;
+    width: 90%;
+    max-width: 500px;
   }
 
   table {

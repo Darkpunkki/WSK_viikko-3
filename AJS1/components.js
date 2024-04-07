@@ -1,7 +1,6 @@
 const restaurantRow = (restaurant) => {
   const {name, city} = restaurant;
   const row = document.createElement('tr');
-  // Set the innerHTML of the tr element to create the table row content with the extracted properties (name and company).
   row.innerHTML = `<td>${name}</td><td>${city}</td>`;
   return row;
 };
@@ -20,10 +19,9 @@ const restaurantModal = (restaurant, menu) => {
         course.price !== null &&
         course.price !== undefined &&
         course.price !== ''
-          ? `${course.price} ` // Adding currency symbol if price exists and is not an empty string
+          ? `${course.price} `
           : 'Not available';
 
-      // Handle diets when it's a string, could be null or undefined
       const dietsInfo = course.diets ? course.diets : 'Not specified';
 
       menuHtml += `
@@ -49,7 +47,6 @@ const restaurantModal = (restaurant, menu) => {
     </div>
   `;
 
-  // Return the complete HTML content
   return completeHtml;
 };
 
