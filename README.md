@@ -1,3 +1,1 @@
-# JS_Template
-
-Use this template to start new node project
+linkki [palvelimelle] (https://users.metropolia.fi/~jimipe/wsk1/viikko3/AJS1/)
